@@ -17,14 +17,19 @@ public class MenuMain extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.menu_main_activity);
+		
+		Runtime runtime = Runtime.getRuntime();
+	    long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+	    System.out.println("Used Memory before:" + usedMemoryBefore);
+	    
 		
 		 ActionBar ab = getActionBar(); 
 		 ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#FFFFFF"));    
 		           ab.setBackgroundDrawable(colorDrawable);		           
 		           ab.setTitle(Html.fromHtml("<font color=\"#990000\">Main Menu<center>"));
-		           
+		 long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+		 System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore));          
          
     }
 		
@@ -69,5 +74,4 @@ public class MenuMain extends Activity {
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         startActivity(launchBrowser);
     }
-
 }

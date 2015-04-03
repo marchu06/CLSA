@@ -21,7 +21,16 @@ public class LoadingScreen extends Activity {
         Toast.makeText(this, "Welcome to the CLSA app!", 
         		Toast.LENGTH_SHORT).show();
         
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Used Memory before:" + usedMemoryBefore);
+            // working code here
+        
+        
         AnimationUtils.loadAnimation(this, R.anim.anim_translate); //load animation method
+        
+        long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore));
         
         /* New Handler to start the Menu-Activity 
          * and close this Splash-Screen after some seconds.*/
@@ -34,6 +43,7 @@ public class LoadingScreen extends Activity {
                 LoadingScreen.this.startActivity(mainIntent);
                 LoadingScreen.this.finish();
             }
-        }, SPLASH_DISPLAY_LENGTH);
-    }
+        }, 
+        SPLASH_DISPLAY_LENGTH);
+        }
 }

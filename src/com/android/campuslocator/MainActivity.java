@@ -67,8 +67,13 @@ public class MainActivity extends FragmentActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.main_activity);
+		
+		Runtime runtime = Runtime.getRuntime();
+	    long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+	    System.out.println("Used Memory before" + usedMemoryBefore);
+	        // working code here
+		
 		mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 		map = mapFragment.getMap();
 		map.getUiSettings().setZoomControlsEnabled(true);  //********//
@@ -106,11 +111,12 @@ public class MainActivity extends FragmentActivity{
 			@Override
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				// TODO Auto-generated method stub
-				
-			}
-				
+				// TODO Auto-generated method stub	
+			}	
 			});
+		
+		long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+	    System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore));
 		
 		
 		map.setMyLocationEnabled(true);
