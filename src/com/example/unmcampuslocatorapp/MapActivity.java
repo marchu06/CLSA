@@ -1,12 +1,25 @@
 package com.example.unmcampuslocatorapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.location.*;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,6 +27,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends FragmentActivity{
 
@@ -40,9 +55,17 @@ public class MapActivity extends FragmentActivity{
 		switch(item.getItemId())
 		{
 		case R.id.menu_button:   //********//
-			Intent i = new Intent(this, SubActivity.class);
-			startActivityForResult(i, 100);
-			return true;
+			if (!isNetworkAvailable())
+			{
+				NoNetworkConnectionDialogFragment dialog = new NoNetworkConnectionDialogFragment();
+				dialog.show(getFragmentManager(), "dialog");
+				return true;
+			}
+			else
+			{
+				Intent i = new Intent(this, SubActivity.class);
+				startActivityForResult(i, 100);
+				return true;}
 		case R.id.help:        //********//
 			Intent i2 = new Intent(this, HelpPage.class);
 			startActivity(i2);
@@ -67,13 +90,7 @@ public class MapActivity extends FragmentActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_activity);
-		
-		Runtime runtime = Runtime.getRuntime();
-	    long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
-	    System.out.println("Used Memory before" + usedMemoryBefore);
-	        // working code here
-		
+		setContentView(R.layout.main_activity);		
 		mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 		map = mapFragment.getMap();
 		map.getUiSettings().setZoomControlsEnabled(true);  //********//
@@ -85,6 +102,13 @@ public class MapActivity extends FragmentActivity{
 			map = mapFragment.getMap();
 		    
 		LocationManager locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		
+		LatLng ece = new LatLng(35.083166, -106.624075);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(ece, 18));
+		map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+		Marker marker = map.addMarker(new MarkerOptions().position(ece).title("Electrical and Computer Engineering").snippet("EECE"));
+		marker.showInfoWindow();
+		
 		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, new LocationListener() {
 
 			@Override
@@ -115,10 +139,6 @@ public class MapActivity extends FragmentActivity{
 			}	
 			});
 		
-		long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
-	    System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore));
-		
-		
 		map.setMyLocationEnabled(true);
 		if (mapFragment != null) {
 			map = mapFragment.getMap();
@@ -135,5 +155,73 @@ public class MapActivity extends FragmentActivity{
 						+ "or see our Help page", Toast.LENGTH_LONG).show();
 		}	
 	}
+	
+	private boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+	
+	public class NoNetworkConnectionDialogFragment extends DialogFragment {
+	    @Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage(R.string.no_connection)
+	               .setPositiveButton((Integer) R.string.cancel, new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       dialog.cancel();
+	                   }
+	               })
+	               .setNegativeButton((Integer) R.string.try_again, new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       dialog.dismiss();
+	                       View view = findViewById(R.id.menu_button);
+                    	   view.performClick(); 
+	                   }
+	               });
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
+	}
+	
+	public class CustomInfoWindowAdapter implements InfoWindowAdapter
+	{
+	    public CustomInfoWindowAdapter()
+	    {
+	    }
 
+		@Override
+		public View getInfoContents(Marker arg0) {
+			
+			View v  = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
+	        ImageView markerIcon = (ImageView) v.findViewById(R.id.marker_icon);
+	        ImageView markerIcon2 = (ImageView) v.findViewById(R.id.marker_icon2);
+	        ImageView markerIcon3 = (ImageView) v.findViewById(R.id.marker_icon3);
+
+	        TextView markerLabel = (TextView)v.findViewById(R.id.marker_label);
+
+	        markerIcon.setImageResource(R.drawable.centennial);
+	        markerIcon2.setImageResource(R.drawable.newb1);
+	        markerIcon3.setImageResource(R.drawable.b2);
+
+
+	        SpannableString string = new SpannableString("Electrical and Computer Engineering");
+	        string.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), 0);
+	        markerLabel.append(string);
+	        markerLabel.append("\n");
+	        markerLabel.append("EECE \n \n (Note: The new Math MaLL is located in the \n "
+	        		+ "basement of the Centennial Library in room L185)");
+	        
+	        return v;
+		}
+
+		@Override
+		public View getInfoWindow(Marker arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+}
 }

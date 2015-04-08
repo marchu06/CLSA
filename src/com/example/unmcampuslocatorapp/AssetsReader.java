@@ -1,5 +1,4 @@
 package com.example.unmcampuslocatorapp;
-
 /*
  * class AssetReader used for abqbuildings.txt. needs to be modified to support all
  * text files we will be using (easy task). all objects set as string type.
@@ -13,13 +12,13 @@ public class AssetsReader {
 	public String title;
 	public String latitude;
 	public String longitude;
-	public String buildingNum;
+	public String buildingAbbr;
 
-	public String getBuildingNum() {
-		return buildingNum;
+	public String getBuildingAbbr() {
+		return buildingAbbr;
 	}
-	public void setBuildingNum(String buildingNum) {
-		this.buildingNum = buildingNum;
+	public void setBuildingAbbr(String buildingAbbr) {
+		this.buildingAbbr = buildingAbbr;
 	}
 
 	public String getTitle() {

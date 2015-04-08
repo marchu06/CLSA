@@ -9,9 +9,18 @@
     <string name="destination_list">Destinations</string>
     <string name="action_search">Search</string>
     <string name="action_help"><b>Help Page</b></string>
-    <string name="numerical">List by Number</string>
-    <string name="alphabetical">List by Name</string>
+    <string name="name">List by Name</string>
+    <string name="abbr">List by Abbr</string>
     <string name="sort">Sort</string>
+    <string name="buildings">All Buildings</string>
+    <string name="parking">Parking</string>
+    <string name="computers">Computer Pods</string>
+    <string name="food">Dining</string>
+    <string name="libraries">Libraries</string>
+    <string name="dorms">Housing</string>
+    <string name="no_connection">No Network Connection!</string>
+    <string name="cancel">Cancel</string>
+    <string name="try_again">Try Again</string>
     <string name="error_title">ERROR</string>
     <string name="help_body"><b>\t Welcome to our help page and thank you for using our UNM 
             campus locator app. For a better experience using our map routing functionality,
