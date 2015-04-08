@@ -1,4 +1,4 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

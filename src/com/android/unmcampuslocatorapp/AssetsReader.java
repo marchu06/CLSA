@@ -1,4 +1,4 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 /*
  * class AssetReader used for abqbuildings.txt. needs to be modified to support all
  * text files we will be using (easy task). all objects set as string type.

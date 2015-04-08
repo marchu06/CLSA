@@ -1,4 +1,6 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
+
+import com.example.unmcampuslocatorapp.R;
 
 import android.app.ActionBar;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ public class MenuMain extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_main_activity);
 		
+		//Junit Testing
 		Runtime runtime = Runtime.getRuntime();
 	    long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
 	    System.out.println("Used Memory before:" + usedMemoryBefore);
@@ -28,6 +31,8 @@ public class MenuMain extends Activity {
 		 ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#FFFFFF"));    
 		           ab.setBackgroundDrawable(colorDrawable);		           
 		           ab.setTitle(Html.fromHtml("<font color=\"#990000\">Main Menu<center>"));
+		           
+		 //Junit Testing          
 		 long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
 		 System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore));          
          

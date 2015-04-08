@@ -1,4 +1,6 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
+
+import com.example.unmcampuslocatorapp.R;
 
 import android.app.Activity;
 import android.content.Intent;

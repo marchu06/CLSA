@@ -1,5 +1,6 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -21,7 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.unmcampuslocatorapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -66,10 +67,6 @@ public class MapActivity extends FragmentActivity{
 				Intent i = new Intent(this, SubActivity.class);
 				startActivityForResult(i, 100);
 				return true;}
-		case R.id.help:        //********//
-			Intent i2 = new Intent(this, HelpPage.class);
-			startActivity(i2);
-			return true;	
 			
 		default:
 			return super.onOptionsItemSelected(item);
@@ -192,6 +189,7 @@ public class MapActivity extends FragmentActivity{
 	    {
 	    }
 
+		@SuppressLint("InflateParams")
 		@Override
 		public View getInfoContents(Marker arg0) {
 			
