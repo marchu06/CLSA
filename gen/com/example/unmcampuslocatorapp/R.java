@@ -312,6 +312,14 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int maskedWalletDetailsTextAppearance=0x7f01001e;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int metaButtonBarButtonStyle=0x7f010026;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int metaButtonBarStyle=0x7f010025;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -386,6 +394,7 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f010014;
     }
     public static final class color {
+        public static final int black_overlay=0x7f080017;
         public static final int common_action_bar_splitter=0x7f080009;
         /**  Sign-in Button Colors 
          */
@@ -398,8 +407,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f080006;
         public static final int common_signin_btn_light_text_focused=0x7f080007;
         public static final int common_signin_btn_light_text_pressed=0x7f080005;
-        public static final int common_signin_btn_text_dark=0x7f080017;
-        public static final int common_signin_btn_text_light=0x7f080018;
+        public static final int common_signin_btn_text_dark=0x7f080018;
+        public static final int common_signin_btn_text_light=0x7f080019;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f08000f;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -418,8 +427,8 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f080011;
         public static final int wallet_holo_blue_light=0x7f080015;
         public static final int wallet_link_text_light=0x7f080016;
-        public static final int wallet_primary_text_holo_light=0x7f080019;
-        public static final int wallet_secondary_text_holo_dark=0x7f08001a;
+        public static final int wallet_primary_text_holo_light=0x7f08001a;
+        public static final int wallet_secondary_text_holo_dark=0x7f08001b;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -672,7 +681,11 @@ containing a value of this type.
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     
- API 11 theme customizations can go here. 
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -683,13 +696,17 @@ containing a value of this type.
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     
- API 11 theme customizations can go here. 
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f060005;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060006;
+        public static final int ButtonBar=0x7f060008;
+        public static final int ButtonBarButton=0x7f060009;
+        public static final int FullscreenActionBarStyle=0x7f06000a;
+        public static final int FullscreenTheme=0x7f060007;
         public static final int Theme_IAPTheme=0x7f060000;
         public static final int WalletFragmentDefaultButtonTextAppearance=0x7f060003;
         public static final int WalletFragmentDefaultDetailsHeaderTextAppearance=0x7f060002;
@@ -777,6 +794,46 @@ containing a value of this type.
           @attr name com.example.unmcampuslocatorapp:adUnitId
         */
         public static final int AdsAttrs_adUnitId = 2;
+        /** 
+         Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels.
+    
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #ButtonBarContainerTheme_metaButtonBarButtonStyle com.example.unmcampuslocatorapp:metaButtonBarButtonStyle}</code></td><td></td></tr>
+           <tr><td><code>{@link #ButtonBarContainerTheme_metaButtonBarStyle com.example.unmcampuslocatorapp:metaButtonBarStyle}</code></td><td></td></tr>
+           </table>
+           @see #ButtonBarContainerTheme_metaButtonBarButtonStyle
+           @see #ButtonBarContainerTheme_metaButtonBarStyle
+         */
+        public static final int[] ButtonBarContainerTheme = {
+            0x7f010025, 0x7f010026
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.unmcampuslocatorapp.R.attr#metaButtonBarButtonStyle}
+          attribute's value can be found in the {@link #ButtonBarContainerTheme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.example.unmcampuslocatorapp:metaButtonBarButtonStyle
+        */
+        public static final int ButtonBarContainerTheme_metaButtonBarButtonStyle = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.example.unmcampuslocatorapp.R.attr#metaButtonBarStyle}
+          attribute's value can be found in the {@link #ButtonBarContainerTheme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.example.unmcampuslocatorapp:metaButtonBarStyle
+        */
+        public static final int ButtonBarContainerTheme_metaButtonBarStyle = 0;
         /**  Attributes for LoadingImageView 
            <p>Includes the following attributes:</p>
            <table>
