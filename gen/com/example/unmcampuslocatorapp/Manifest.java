@@ -9,6 +9,6 @@ package com.example.unmcampuslocatorapp;
 
 public final class Manifest {
     public static final class permission {
-        public static final String MAPS_RECEIVE="com.android.campuslocator.permission.MAPS_RECEIVE";
+        public static final String MAPS_RECEIVE="com.android.unmcampuslocatorapp.permission.MAPS_RECEIVE";
     }
 }

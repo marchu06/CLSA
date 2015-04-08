@@ -6,15 +6,15 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="22" />
 
     <permission
-        android:name="com.android.campuslocator.permission.MAPS_RECEIVE"
+        android:name="com.android.unmcampuslocatorapp.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.android.campuslocator.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.android.unmcampuslocatorapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.android.campuslocator.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.android.unmcampuslocatorapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreen"
+            android:name="com.android.unmcampuslocatorapp.SplashScreen"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,39 +41,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MenuMain"
+            android:name="com.android.unmcampuslocatorapp.MenuMain"
             android:label="@string/menu_main"
             >
         </activity>
         
         <activity
             android:id="@+id/mapView"
-            android:name=".MapActivity"
+            android:name="com.android.unmcampuslocatorapp.MapActivity"
             android:label="UNM Campus Map"
-            android:parentActivityName=".MenuMain" >
+            android:parentActivityName="com.android.unmcampuslocatorapp.MenuMain" >
         </activity>
         
         <activity
-            android:name=".SubActivity"
+            android:name="com.android.unmcampuslocatorapp.SubActivity"
             android:label="@string/sub_name"
-            android:parentActivityName=".MapActivity" >
+            android:parentActivityName="com.android.unmcampuslocatorapp.MapActivity" >
         </activity> 
         <activity  
-            android:name=".HelpPage"       
+            android:name="com.android.unmcampuslocatorapp.HelpPage"       
             android:label="@string/action_help"
-            android:parentActivityName=".SubActivity" >
+            android:parentActivityName="com.android.unmcampuslocatorapp.SubActivity" >
         </activity>
         <activity    
-            android:name=".ErrorLoadingScreen"
+            android:name="com.android.unmcampuslocatorapp.ErrorLoadingScreen"
             android:label="@string/error_title" >
         </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBqBvDTdF2YmkkjfzZyWwiNwHKna1akAL0" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        
+        <meta-data android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
         
         
     </application>
