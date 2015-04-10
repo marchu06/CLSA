@@ -91,7 +91,8 @@ public class SubActivity extends Activity{
 	    RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 	    radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
 	    {
-	    	public void onCheckedChanged(RadioGroup group, int checkedId)
+	    	@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId)
 	    	{
 	    		switch(checkedId)
 	    		{

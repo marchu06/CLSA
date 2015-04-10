@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -186,13 +185,15 @@ public class MapActivity extends FragmentActivity{
 	        // Use the Builder class for convenient dialog construction
 	        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	        builder.setMessage(R.string.no_connection)
-	               .setPositiveButton((Integer) R.string.cancel, new DialogInterface.OnClickListener() {
-	                   public void onClick(DialogInterface dialog, int id) {
+	               .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+	                   @Override
+					public void onClick(DialogInterface dialog, int id) {
 	                       dialog.cancel();
 	                   }
 	               })
-	               .setNegativeButton((Integer) R.string.try_again, new DialogInterface.OnClickListener() {
-	                   public void onClick(DialogInterface dialog, int id) {
+	               .setNegativeButton(R.string.try_again, new DialogInterface.OnClickListener() {
+	                   @Override
+					public void onClick(DialogInterface dialog, int id) {
 	                       dialog.dismiss();
 	                       View view = findViewById(R.id.menu_button);
                     	   view.performClick(); 
