@@ -67,6 +67,12 @@
             android:name=".ErrorLoadingScreen"
             android:label="@string/error_title" >
         </activity>
+        
+        <activity
+            android:name=".ZoomPicture"
+            android:label="Centennial Science &amp; Engineering Library"
+            android:parentActivityName=".MapActivity" >
+            </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

@@ -7,8 +7,7 @@ import android.os.Process;
 import android.content.Context;
 import android.content.Intent;
 
-public class MyExceptionHandler implements
-java.lang.Thread.UncaughtExceptionHandler {
+public class MyExceptionHandler implements java.lang.Thread.UncaughtExceptionHandler {
 private final Context myContext;
 private final Class<?> myActivityClass;
 

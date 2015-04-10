@@ -18,12 +18,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -40,6 +43,7 @@ public class MapActivity extends FragmentActivity{
 	String longitude;
 	double lat, longi;
 	Intent intent = getIntent();
+	ImageButton btn_home;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -139,6 +143,19 @@ public class MapActivity extends FragmentActivity{
 			}	
 			});
 		
+    	map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+
+	        @Override
+	        public void onInfoWindowClick(Marker arg0) {
+	            // TODO Auto-generated method stub
+	            Intent intent = new Intent(getBaseContext(),
+	                    ZoomPicture.class);
+	            startActivity(intent);
+	        ;
+
+	        }
+    	});
+		
 		map.setMyLocationEnabled(true);
 		if (mapFragment != null) {
 			map = mapFragment.getMap();
@@ -186,10 +203,10 @@ public class MapActivity extends FragmentActivity{
 	    }
 	}
 	
-	public class CustomInfoWindowAdapter implements InfoWindowAdapter
-	{
-	    public CustomInfoWindowAdapter()
-	    {
+	public class CustomInfoWindowAdapter implements InfoWindowAdapter 
+	{		
+	    public CustomInfoWindowAdapter() 
+	    {	    	
 	    }
 
 		@Override
@@ -203,25 +220,28 @@ public class MapActivity extends FragmentActivity{
 
 	        TextView markerLabel = (TextView)v.findViewById(R.id.marker_label);
 
-	        markerIcon.setImageResource(R.drawable.centennial);
-	        markerIcon2.setImageResource(R.drawable.newb1);
-	        markerIcon3.setImageResource(R.drawable.b2);
+	        markerIcon.setImageResource(R.drawable.centennial2);
+	        markerIcon2.setImageResource(R.drawable.b1new);
+	        markerIcon3.setImageResource(R.drawable.b2new);
 
 
-	        SpannableString string = new SpannableString("Electrical and Computer Engineering");
+	        SpannableString string = new SpannableString("Centennial Science & Engineering Library");
 	        string.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), 0);
 	        markerLabel.append(string);
 	        markerLabel.append("\n");
-	        markerLabel.append("EECE \n \n (Note: The new Math MaLL is located in the \n "
-	        		+ "basement of the Centennial Library in room L185)");
+	        markerLabel.append("CSEL \n (Note: The new Math MaLL is located \n in the "
+	        		+ "basement, in room L185) \n *Tap a pic below for a better view");
 	        
 	        return v;
-		}
-
+		
+		
+	    }
+		
+		
 		@Override
 		public View getInfoWindow(Marker arg0) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-}
+	}
 }
