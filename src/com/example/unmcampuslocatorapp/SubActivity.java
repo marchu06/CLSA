@@ -155,13 +155,23 @@ public class SubActivity extends Activity{
 				// TODO Auto-generated method stub
 				// set up an intent to pass data when item from row is clicked
 				
-				Intent intent = new Intent(SubActivity.this, MapActivity.class);
+				//Intent intent = new Intent(SubActivity.this, MapActivity.class);
 				
 				//intent.putExtra("latitude", AssetsReader.getLatitude());
 				//intent.putExtra("longitude", AssetsReader.getLongitude());
 				//setResult(RESULT_OK, intent);
-				startActivityForResult(intent, 0);
+				//startActivityForResult(intent, 0);
 
+				
+				Intent intent = new Intent(SubActivity.this, MapActivity.class);
+				AssetsReader AR = new AssetsReader();
+				
+				intent.putExtra("longitude", adapter.getItem(arg2).getLatitude());
+				intent.putExtra("latitude", adapter.getItem(arg2).getLongitude());
+				//intent.putExtra("latitude", AR.getLatitude());
+				//intent.putExtra("longitude", AR.getLongitude());
+
+				startActivity(intent);
 			}
 	    });  
 	}
