@@ -125,7 +125,7 @@ public class MapActivity extends FragmentActivity{
 			
 			//LatLng buildingSelected = new LatLng(lat, longi);
 			
-			Location loc = map.getMyLocation();
+			map.getMyLocation();
 			
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 			Criteria criteria = new Criteria();
@@ -452,7 +452,7 @@ public class MapActivity extends FragmentActivity{
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+            new MarkerOptions();
  
             // Traversing through all the routes
             for(int i=0;i<result.size();i++){
@@ -479,7 +479,8 @@ public class MapActivity extends FragmentActivity{
  
                 // Changing the color polyline according to the mode
                 //if(mMode==MODE_WALKING)
-                    lineOptions.color(Color.BLUE);
+                    lineOptions.color(Color.RED);
+                    lineOptions.width(5);
             }
  
             if(result.size()<1){
