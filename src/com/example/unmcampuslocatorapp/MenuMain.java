@@ -52,15 +52,13 @@ public class MenuMain extends Activity {
 	public void openevents(View view) {
 		Animation animEvents = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
         view.startAnimation(animEvents);
-	    Intent i = new Intent(this , MapActivity.class);
-	    startActivity(i);
+        goToUrl ( "http://unmevents.unm.edu");
 	} 
 	
 	public void openschedule(View view) {
 		Animation animSchedule = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
         view.startAnimation(animSchedule);
-	    Intent i = new Intent(this , MapActivity.class);
-	    startActivity(i);
+        goToUrl ( "https://schedule.unm.edu/");
 	} 
 	
 	public void openMyUNM (View view) {

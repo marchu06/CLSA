@@ -9,7 +9,7 @@ import android.view.animation.AnimationUtils;
 
 public class ErrorLoadingScreen extends Activity {
     /** Duration of wait **/
-    private final int SPLASH_DISPLAY_LENGTH = 5000;
+    private final int SPLASH_DISPLAY_LENGTH = 3500;
 
     /** Called when the activity is first created. */
     @Override
