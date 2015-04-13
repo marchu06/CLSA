@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -33,8 +34,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,12 +58,7 @@ public class MapActivity extends FragmentActivity{
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
 	public Location loc;
-	Marker location;
-	String latitude;
-	String longitude;
-	double lat, longi;
-	Intent intent = getIntent();
-	ImageButton btn_home;
+	protected Bundle intent;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -106,25 +105,19 @@ public class MapActivity extends FragmentActivity{
 		map.getUiSettings().setZoomControlsEnabled(true);  //********//
 		map.getUiSettings().setZoomGesturesEnabled(true);  //********//
 		map.getUiSettings().setRotateGesturesEnabled(true); //********//
-		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);   //********//
 		
 		map.setMyLocationEnabled(true);
 		
 		// bundle and intent used to change camera location if user has selected coordinates from list
-		Bundle intent = getIntent().getExtras();
-		//if (intent != null && intent.getString("latitude") != null && intent.getString("longitude") != null) {
+		intent = getIntent().getExtras();
 		if (intent != null) {
-			double lat, longi;
 			
+			String latitude = intent.getString("latitude");
+			String longitude = intent.getString("longitude");
 			
-			latitude = intent.getString("latitude");
-			longitude = intent.getString("longitude");
-			
-			lat = convertStringToDouble(latitude);
-			longi = convertStringToDouble(longitude);
-			
-			//LatLng buildingSelected = new LatLng(lat, longi);
-			
+			double lat = convertStringToDouble(latitude);
+			double longi = convertStringToDouble(longitude);
+						
 			map.getMyLocation();
 			
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -152,8 +145,13 @@ public class MapActivity extends FragmentActivity{
 			
 			
 			LatLng buildingSelected = new LatLng(lat, longi);
-			map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-			Marker marker = map.addMarker(new MarkerOptions().position(buildingSelected));
+			Marker marker;
+			if (intent.getString("title").equals("Centennial Library") ||
+					intent.getString("title").equals("Electrical And Computer Engineering"))
+				map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+			
+			marker = map.addMarker(new MarkerOptions().title(intent.getString("title"))
+						.snippet(intent.getString("abbr")).position(buildingSelected));
 			marker.showInfoWindow();
 		}
 		
@@ -161,20 +159,14 @@ public class MapActivity extends FragmentActivity{
 			map = mapFragment.getMap();
 		    
 		LocationManager locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		/*
-		LatLng ece = new LatLng(35.083166, -106.624075);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(ece, 18));
-		map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-		Marker marker = map.addMarker(new MarkerOptions().position(ece).title("Electrical and Computer Engineering").snippet("EECE"));
-		marker.showInfoWindow(); */
 		
 		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, new LocationListener() {
 
 			@Override
 			public void onLocationChanged(Location arg0) {
-			//	map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				//		new LatLng(arg0.getLatitude(), arg0
-					//			.getLongitude()), 15));
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+						new LatLng(arg0.getLatitude(), arg0
+								.getLongitude()), 17));
 				// TODO Auto-generated method stub
 				
 			}
@@ -203,11 +195,11 @@ public class MapActivity extends FragmentActivity{
 	        @Override
 	        public void onInfoWindowClick(Marker arg0) {
 	            // TODO Auto-generated method stub
-	            Intent intent = new Intent(getBaseContext(),
-	                    ZoomPicture.class);
-	            startActivity(intent);
-	        ;
-
+	        	if (arg0.getTitle().equals("Centennial Library"))
+	        	{
+	        		Intent intent = new Intent(getBaseContext(), ZoomPicture.class);
+	        		startActivity(intent);
+	        	}
 	        }
     	});
 		
@@ -226,105 +218,8 @@ public class MapActivity extends FragmentActivity{
 			Toast.makeText(this, "Map failed! Please restart your device"
 						+ "or see our Help page", Toast.LENGTH_LONG).show();
 		}	
-		
-		/*
-        // Getting reference to rb_walking
-        rbWalking = (RadioButton) findViewById(R.id.rb_walking);
- 
-        // Getting Reference to rg_modes
-        rgModes = (RadioGroup) findViewById(R.id.rg_modes);
- 
-        rgModes.setOnCheckedChangeListener(new OnCheckedChangeListener() {
- 
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
- 
-                // Checks, whether start and end locations are captured
-                if(markerPoints.size() >= 2){
-                    LatLng origin = markerPoints.get(0);
-                    LatLng dest = markerPoints.get(1);
- 
-                    // Getting URL to the Google Directions API
-                    String url = getDirectionsUrl(origin, dest);
- 
-                    DownloadTask downloadTask = new DownloadTask();
- 
-                    // Start downloading json data from Google Directions API
-                    downloadTask.execute(url);
-                }
-            }
-        });*/
-
-        // Initializing
-        //markerPoints = new ArrayList<LatLng>();
- 
-        // Getting reference to SupportMapFragment of the activity_main
-        //SupportMapFragment fm = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
- 
-        // Getting Map for the SupportMapFragment
-        //map = fm.getMap();
- 
-        // Enable MyLocation Button in the Map
-        //map.setMyLocationEnabled(true);
- 
-        /*
-        // Setting onclick event listener for the map
-        map.setOnMapClickListener(new OnMapClickListener() {
- 
-            @Override
-            public void onMapClick(LatLng point) {
- 
-                // Already two locations
-                if(markerPoints.size()>1){
-                    markerPoints.clear();
-                    map.clear();
-                }
- 
-                // Adding new item to the ArrayList
-                markerPoints.add(point);
- 
-                // Draws Start and Stop markers on the Google Map
-                drawStartStopMarkers();
- 
-                // Checks, whether start and end locations are captured
-                if(markerPoints.size() >= 2){
-                    LatLng origin = markerPoints.get(0);
-                    LatLng dest = markerPoints.get(1);
- 
-                    // Getting URL to the Google Directions API
-                    String url = getDirectionsUrl(origin, dest);
- 
-                    DownloadTask downloadTask = new DownloadTask();
- 
-                    // Start downloading json data from Google Directions API
-                    downloadTask.execute(url);
-                }
-            }
-        }); */
 	}
-	
-	/*
-    // Drawing Start and Stop locations
-    private void drawStartStopMarkers(){
- 
-        for(int i = 0; i < markerPoints.size();i++){
- 
-            // Creating MarkerOptions
-            MarkerOptions options = new MarkerOptions();
- 
-            // Setting the position of the marker
-            options.position(markerPoints.get(i) );
- 
-            if(i==0){
-                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            }else if(i==1){
-                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            }
- 
-            // Add new marker to the Google Map Android API V2
-            map.addMarker(options);
-        }
-    } */
-    
+
     private String getDirectionsUrl(LatLng origin,LatLng dest){
     	 
         // Origin of route
@@ -541,24 +436,32 @@ public class MapActivity extends FragmentActivity{
 		public View getInfoContents(Marker arg0) {
 			
 			View v  = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-
+			
 	        ImageView markerIcon = (ImageView) v.findViewById(R.id.marker_icon);
 	        ImageView markerIcon2 = (ImageView) v.findViewById(R.id.marker_icon2);
 	        ImageView markerIcon3 = (ImageView) v.findViewById(R.id.marker_icon3);
 
 	        TextView markerLabel = (TextView)v.findViewById(R.id.marker_label);
 
-	        markerIcon.setImageResource(R.drawable.centennial2);
-	        markerIcon2.setImageResource(R.drawable.b1new);
-	        markerIcon3.setImageResource(R.drawable.b2new);
+	        if(intent.getString("title").equals("Centennial Library"))
+	        {
+		        markerIcon.setImageResource(R.drawable.centennial2);
+		        markerIcon2.setImageResource(R.drawable.b1new);
+		        markerIcon3.setImageResource(R.drawable.b2new);	
+	        }
+	        else if (intent.getString("title").equals("Electrical And Computer Engineering"))
+	        {
+		        markerIcon.setImageResource(R.drawable.ece);
+	        }
 
-
-	        SpannableString string = new SpannableString("Centennial Science & Engineering Library");
+	        SpannableString string = new SpannableString(intent.getString("title"));
 	        string.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), 0);
 	        markerLabel.append(string);
-	        markerLabel.append("\n");
-	        markerLabel.append("CSEL \n (Note: The new Math MaLL is located \n in the "
-	        		+ "basement, in room L185) \n *Tap a pic below for a better view");
+	        if(intent.getString("abbr") != null)
+	        	markerLabel.append("\n" + intent.getString("abbr"));
+	        if (intent.getString("title").equals("Centennial Library") || intent.getString("title").equals(
+	        		"Electrical And Computer Engineering"))
+	        	markerLabel.append("\n" + intent.getString("description"));
 	        
 	        return v;
 		

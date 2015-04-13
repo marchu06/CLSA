@@ -151,25 +151,20 @@ public class SubActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				 
-				// TODO Auto-generated method stub
-				// set up an intent to pass data when item from row is clicked
-				
-				//Intent intent = new Intent(SubActivity.this, MapActivity.class);
-				
-				//intent.putExtra("latitude", AssetsReader.getLatitude());
-				//intent.putExtra("longitude", AssetsReader.getLongitude());
-				//setResult(RESULT_OK, intent);
-				//startActivityForResult(intent, 0);
-
-				
 				Intent intent = new Intent(SubActivity.this, MapActivity.class);
 				AssetsReader AR = new AssetsReader();
 				
 				intent.putExtra("longitude", adapter.getItem(arg2).getLatitude());
 				intent.putExtra("latitude", adapter.getItem(arg2).getLongitude());
-				//intent.putExtra("latitude", AR.getLatitude());
-				//intent.putExtra("longitude", AR.getLongitude());
+				intent.putExtra("title", adapter.getItem(arg2).getTitle());
+				intent.putExtra("abbr", adapter.getItem(arg2).getBuildingAbbr());
+				
+				if(adapter.getItem(arg2).getTitle().equals("Centennial Library") ||
+						adapter.getItem(arg2).getTitle().equals("Electrical And Computer Engineering"))
+				{
+					intent.putExtra("description", "(Note: The new Math MaLL is located \n in the "
+	        		+ "basement of Centennial Library, room L185)");
+				}
 
 				startActivity(intent);
 			}
