@@ -1,4 +1,4 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 
 /*
  * This is a custom adapter class that is made to take data from the abqbuildings.txt

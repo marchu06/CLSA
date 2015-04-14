@@ -1,4 +1,4 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.unmcampuslocatorapp.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

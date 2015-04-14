@@ -1,4 +1,4 @@
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
  
  //http://wptrafficanalyzer.in/blog/route-directions-for-driving-mode-bicycling-and-walking-mode-in-google-map-android-api-v2/ 
  
