@@ -1,19 +1,21 @@
-package com.android.unmcampuslocatorapp;
+package com.unmcampuslocatorapp;
  
  //http://wptrafficanalyzer.in/blog/route-directions-for-driving-mode-bicycling-and-walking-mode-in-google-map-android-api-v2/ 
  
  
  import java.util.ArrayList; 
- import java.util.HashMap; 
- import java.util.List; 
+import java.util.HashMap; 
+import java.util.List; 
  
  
+
  import org.json.JSONArray; 
- import org.json.JSONException; 
- import org.json.JSONObject; 
+import org.json.JSONException; 
+import org.json.JSONObject; 
  
  
- import com.google.android.gms.maps.model.LatLng; 
+
+import com.google.android.gms.maps.model.LatLng; 
  
  
  
@@ -22,7 +24,7 @@ package com.android.unmcampuslocatorapp;
      /** Receives a JSONObject and returns a list of lists containing latitude and longitude */ 
      public List<List<HashMap<String,String>>> parse(JSONObject jObject){ 
    
-         List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String,String>>>() ; 
+         List routes = new ArrayList<List<HashMap<String,String>>>() ; 
          JSONArray jRoutes = null; 
          JSONArray jLegs = null; 
          JSONArray jSteps = null; 
@@ -34,7 +36,7 @@ package com.android.unmcampuslocatorapp;
              /** Traversing all routes */ 
              for(int i=0;i<jRoutes.length();i++){ 
                  jLegs = ( (JSONObject)jRoutes.get(i)).getJSONArray("legs"); 
-                 List path = new ArrayList<HashMap<String, String>>(); 
+                 List<HashMap<String, String>> path = new ArrayList<HashMap<String, String>>(); 
    
                  /** Traversing all legs */ 
                  for(int j=0;j<jLegs.length();j++){ 

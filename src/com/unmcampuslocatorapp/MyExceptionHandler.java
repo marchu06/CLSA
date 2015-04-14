@@ -1,4 +1,4 @@
-package com.android.unmcampuslocatorapp;
+package com.unmcampuslocatorapp;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

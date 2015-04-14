@@ -1,6 +1,6 @@
-package com.android.unmcampuslocatorapp;
+package com.unmcampuslocatorapp;
 
-import com.android.unmcampuslocatorapp.R;
+import com.unmcampuslocatorapp.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;

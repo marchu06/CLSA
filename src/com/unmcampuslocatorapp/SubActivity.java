@@ -1,6 +1,6 @@
-package com.android.unmcampuslocatorapp;
+package com.unmcampuslocatorapp;
 
-import com.android.unmcampuslocatorapp.R;
+import com.unmcampuslocatorapp.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -154,8 +154,6 @@ public class SubActivity extends Activity{
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				Intent intent = new Intent(SubActivity.this, MapActivity.class);
-				AssetsReader AR = new AssetsReader();
-				
 				intent.putExtra("longitude", adapter.getItem(arg2).getLatitude());
 				intent.putExtra("latitude", adapter.getItem(arg2).getLongitude());
 				intent.putExtra("title", adapter.getItem(arg2).getTitle());
