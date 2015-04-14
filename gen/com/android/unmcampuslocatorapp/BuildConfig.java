@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.example.unmcampuslocatorapp;
+package com.android.unmcampuslocatorapp;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

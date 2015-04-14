@@ -1,6 +1,6 @@
 package com.android.unmcampuslocatorapp;
 
-import com.example.unmcampuslocatorapp.R;
+import com.android.unmcampuslocatorapp.R;
 
 import android.app.ActionBar;
 import android.graphics.Color;
