@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ZoomPicture" >
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="275dp"
+                android:layout_height="375dp"
+                android:layout_margin="10dp"
+                android:layout_weight="0.49"
+                android:src="@drawable/centennial" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="10dp"
+                android:src="@drawable/newb1" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="10dp"
+                android:src="@drawable/newb2" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Swipe left to scroll"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>

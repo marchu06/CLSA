@@ -159,11 +159,16 @@ public class SubActivity extends Activity{
 				intent.putExtra("title", adapter.getItem(arg2).getTitle());
 				intent.putExtra("abbr", adapter.getItem(arg2).getBuildingAbbr());
 				
-				if(adapter.getItem(arg2).getTitle().equals("Centennial Library") ||
-						adapter.getItem(arg2).getTitle().equals("Electrical And Computer Engineering"))
+				if(adapter.getItem(arg2).getTitle().equals("Electrical And Computer Engineering"))
 				{
 					intent.putExtra("description", "(Note: The new Math MaLL is located \n in the "
 	        		+ "basement of Centennial Library, room L185)");
+				}
+				
+				if(adapter.getItem(arg2).getTitle().equals("Centennial Library"))
+				{
+					intent.putExtra("description", "(Note: The new Math MaLL is located \n in the "
+	        		+ "basement of Centennial Library, room L185) \n *Touch here to view larger images*");
 				}
 
 				startActivity(intent);

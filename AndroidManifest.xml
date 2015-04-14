@@ -70,8 +70,8 @@
         
         <activity
             android:name=".ZoomPicture"
-            android:label="Centennial Science &amp; Engineering Library"
-            android:parentActivityName=".MapActivity" >
+            android:parentActivityName=".MapActivity"
+            android:label="Centennial Science &amp; Engineering Library"  >
             </activity>
 
         <meta-data
