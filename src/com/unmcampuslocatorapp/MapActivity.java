@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
@@ -33,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -56,7 +59,10 @@ public class MapActivity extends FragmentActivity{
 	protected Bundle intent;
 	private LocationManager locManager;
 	private static boolean RUN_ONCE = true;
+	private static boolean GET_LOCATION = true;
 	private LatLng unm = new LatLng(35.0843, -106.62);
+	private LatLngBounds.Builder builder;
+	private LatLng origin, dest;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -105,19 +111,29 @@ public class MapActivity extends FragmentActivity{
 		map.getUiSettings().setRotateGesturesEnabled(true); //********//
 		
 		map.setMyLocationEnabled(true);
+		
 		locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		
+		while (map.equals(null))
+			map = mapFragment.getMap();
+		
+		getLocationListener(locManager.GPS_PROVIDER);
 		
 		if(locManager.isProviderEnabled(locManager.GPS_PROVIDER))
 		{
 			Location firstLoc = locManager.getLastKnownLocation(locManager.PASSIVE_PROVIDER);
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(firstLoc.getLatitude(), firstLoc.getLongitude()), 17));	
+			if(firstLoc != null)
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(firstLoc.getLatitude(), firstLoc.getLongitude()), 17));	
+			else
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(unm, 17));	
+
 		}
 		else
 		{
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(unm, 17));	
 			runOnce();
 		}
-
+		
 		// bundle and intent used to change camera location if user has selected coordinates from list
 		intent = getIntent().getExtras();
 		if (intent != null) {
@@ -132,15 +148,17 @@ public class MapActivity extends FragmentActivity{
 			
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+			dest = new LatLng(lat, longi);
+
 			if (locManager.isProviderEnabled(locManager.GPS_PROVIDER))
 			{
+				GET_LOCATION = false;
 				location = locationManager.getLastKnownLocation(locationManager.PASSIVE_PROVIDER);
 
 				double lat2 = location.getLatitude();
 				double long2 = location.getLongitude();
 			
-				LatLng origin = new LatLng(lat2, long2);
-				LatLng dest = new LatLng(lat, longi);
+				origin = new LatLng(lat2, long2);
 
 				// Getting URL to the Google Directions API
 				String url = getDirectionsUrl(origin, dest);
@@ -149,11 +167,24 @@ public class MapActivity extends FragmentActivity{
 
 				// Start downloading json data from Google Directions API
 				downloadTask.execute(url);
+				
+				builder = new LatLngBounds.Builder();
+				builder.include(origin);
+				builder.include(dest);
+				
+				map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() { 
+					@Override 
+					public void onMapLoaded() { 
+					    map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+					 } 
+					});
+
 			}
-			
-			
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longi), 17);
-			map.animateCamera(cameraUpdate);
+			else
+			{
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longi), 17);
+				map.animateCamera(cameraUpdate);	
+			}
 			
 			LatLng buildingSelected = new LatLng(lat, longi);
 			Marker marker;
@@ -165,12 +196,8 @@ public class MapActivity extends FragmentActivity{
 						.snippet(intent.getString("abbr")).position(buildingSelected));
 			marker.showInfoWindow();
 		}
-		
-		while (map.equals(null))
-			map = mapFragment.getMap();
-		    
-		getLocationListener(locManager.GPS_PROVIDER);
-		
+
+		    		
     	map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
 	        @Override
@@ -392,14 +419,18 @@ public class MapActivity extends FragmentActivity{
 	private void getLocationListener(String provider)
 	{
 
-		locManager.requestLocationUpdates(provider, 2000, 1, new LocationListener() {
+		locManager.requestLocationUpdates(provider, 5000, 1, new LocationListener() {
 
 			@Override
 			public void onLocationChanged(Location arg0) {
-				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+				if(GET_LOCATION)
+				{
+					GET_LOCATION = false;
+					map.moveCamera(CameraUpdateFactory.newLatLngZoom(
 						new LatLng(arg0.getLatitude(), arg0
 								.getLongitude()), 17));
-				// TODO Auto-generated method stub
+				}
+				 //TODO Auto-generated method stub
 				
 			}
 
@@ -411,6 +442,37 @@ public class MapActivity extends FragmentActivity{
 			@Override
 			public void onProviderEnabled(String provider) {
 				RUN_ONCE = true;
+				if (dest != null)
+				{
+					GET_LOCATION = false;
+					Location location = locManager.getLastKnownLocation(locManager.PASSIVE_PROVIDER);
+
+					double lat2 = location.getLatitude();
+					double long2 = location.getLongitude();
+				
+					origin = new LatLng(lat2, long2);
+
+					// Getting URL to the Google Directions API
+					String url = getDirectionsUrl(origin, dest);
+
+					DownloadTask downloadTask = new DownloadTask();
+
+					// Start downloading json data from Google Directions API
+					downloadTask.execute(url);
+					
+					builder = new LatLngBounds.Builder();
+					builder.include(origin);
+					builder.include(dest);
+					
+					map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() { 
+						@Override 
+						public void onMapLoaded() { 
+						    map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+						 } 
+						});
+
+				}
+					
 			}
 
 			@Override
