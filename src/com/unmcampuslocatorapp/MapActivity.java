@@ -54,6 +54,9 @@ public class MapActivity extends FragmentActivity{
 	private GoogleMap map;
 	public Location loc;
 	protected Bundle intent;
+	private LocationManager locManager;
+	private static boolean RUN_ONCE = true;
+	private LatLng unm = new LatLng(35.0843, -106.62);
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -102,11 +105,23 @@ public class MapActivity extends FragmentActivity{
 		map.getUiSettings().setRotateGesturesEnabled(true); //********//
 		
 		map.setMyLocationEnabled(true);
+		locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		
+		if(locManager.isProviderEnabled(locManager.GPS_PROVIDER))
+		{
+			Location firstLoc = locManager.getLastKnownLocation(locManager.PASSIVE_PROVIDER);
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(firstLoc.getLatitude(), firstLoc.getLongitude()), 17));	
+		}
+		else
+		{
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(unm, 17));	
+			runOnce();
+		}
+
 		// bundle and intent used to change camera location if user has selected coordinates from list
 		intent = getIntent().getExtras();
 		if (intent != null) {
-			
+			Location location = null;
 			String latitude = intent.getString("latitude");
 			String longitude = intent.getString("longitude");
 			
@@ -116,28 +131,29 @@ public class MapActivity extends FragmentActivity{
 			map.getMyLocation();
 			
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-			Criteria criteria = new Criteria();
-			String bestProvider = locationManager.getBestProvider(criteria, true);
-			Location location = locationManager.getLastKnownLocation(bestProvider);
+
+			if (locManager.isProviderEnabled(locManager.GPS_PROVIDER))
+			{
+				location = locationManager.getLastKnownLocation(locationManager.PASSIVE_PROVIDER);
+
+				double lat2 = location.getLatitude();
+				double long2 = location.getLongitude();
 			
-			double lat2 = location.getLatitude();
-			double long2 = location.getLongitude();
+				LatLng origin = new LatLng(lat2, long2);
+				LatLng dest = new LatLng(lat, longi);
+
+				// Getting URL to the Google Directions API
+				String url = getDirectionsUrl(origin, dest);
+
+				DownloadTask downloadTask = new DownloadTask();
+
+				// Start downloading json data from Google Directions API
+				downloadTask.execute(url);
+			}
 			
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longi), 15);
+			
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longi), 17);
 			map.animateCamera(cameraUpdate);
-			
-            LatLng origin = new LatLng(lat2, long2);
-            LatLng dest = new LatLng(lat, longi);
-
-            // Getting URL to the Google Directions API
-            String url = getDirectionsUrl(origin, dest);
-
-            DownloadTask downloadTask = new DownloadTask();
-
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
-			
-			
 			
 			LatLng buildingSelected = new LatLng(lat, longi);
 			Marker marker;
@@ -153,37 +169,7 @@ public class MapActivity extends FragmentActivity{
 		while (map.equals(null))
 			map = mapFragment.getMap();
 		    
-		LocationManager locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, new LocationListener() {
-
-			@Override
-			public void onLocationChanged(Location arg0) {
-				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-						new LatLng(arg0.getLatitude(), arg0
-								.getLongitude()), 17));
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onProviderDisabled(String provider) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-				// TODO Auto-generated method stub	
-			}	
-			});
+		getLocationListener(locManager.GPS_PROVIDER);
 		
     	map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
@@ -198,7 +184,6 @@ public class MapActivity extends FragmentActivity{
 	        }
     	});
 		
-		//map.setMyLocationEnabled(true);
 		if (mapFragment != null) {
 			map = mapFragment.getMap();
 			
@@ -213,6 +198,14 @@ public class MapActivity extends FragmentActivity{
 			Toast.makeText(this, "Map failed! Please restart your device"
 						+ "or see our Help page", Toast.LENGTH_LONG).show();
 		}	
+	}
+
+	private void runOnce() {
+		if (RUN_ONCE){
+			RUN_ONCE = false;
+			NoGpsEnabledDialogFragment dialog = new NoGpsEnabledDialogFragment();
+			dialog.show(getFragmentManager(), "dialog");	
+		}
 	}
 
     private String getDirectionsUrl(LatLng origin,LatLng dest){
@@ -396,6 +389,38 @@ public class MapActivity extends FragmentActivity{
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 	
+	private void getLocationListener(String provider)
+	{
+
+		locManager.requestLocationUpdates(provider, 2000, 1, new LocationListener() {
+
+			@Override
+			public void onLocationChanged(Location arg0) {
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+						new LatLng(arg0.getLatitude(), arg0
+								.getLongitude()), 17));
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onProviderDisabled(String provider) {
+
+			}
+
+			@Override
+			public void onProviderEnabled(String provider) {
+				RUN_ONCE = true;
+			}
+
+			@Override
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub	
+			}	
+			});
+	}
+
 	public class NoNetworkConnectionDialogFragment extends DialogFragment {
 	    @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -421,6 +446,30 @@ public class MapActivity extends FragmentActivity{
 	    }
 	}
 	
+	public class NoGpsEnabledDialogFragment extends DialogFragment {
+		@Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage(R.string.no_gps)
+	               .setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
+	                   @Override
+					public void onClick(DialogInterface dialog, int id) {
+	                       dialog.cancel();
+	                   }
+	               })
+	               .setNegativeButton(R.string.settings, new DialogInterface.OnClickListener() {
+	                   @Override
+					public void onClick(DialogInterface dialog, int id) {
+	                       dialog.dismiss();
+	                       startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+	                   }
+	               });
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
+	}
+
 	public class CustomInfoWindowAdapter implements InfoWindowAdapter 
 	{		
 	    public CustomInfoWindowAdapter() 
