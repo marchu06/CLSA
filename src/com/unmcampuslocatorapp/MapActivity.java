@@ -59,7 +59,7 @@ public class MapActivity extends FragmentActivity{
 	protected Bundle intent;
 	private LocationManager locManager;
 	private static boolean RUN_ONCE = true;
-	private static boolean GET_LOCATION = true;
+	private static boolean RUN_ONCE_NETWORK = true;
 	private LatLng unm = new LatLng(35.0843, -106.62);
 	private LatLngBounds.Builder builder;
 	private LatLng origin, dest;
@@ -78,17 +78,9 @@ public class MapActivity extends FragmentActivity{
 		switch(item.getItemId())
 		{
 		case R.id.menu_button:   //********//
-			if (!isNetworkAvailable())
-			{
-				NoNetworkConnectionDialogFragment dialog = new NoNetworkConnectionDialogFragment();
-				dialog.show(getFragmentManager(), "dialog");
-				return true;
-			}
-			else
-			{
-				Intent i = new Intent(this, SubActivity.class);
-				startActivityForResult(i, 100);
-				return true;}
+			Intent i = new Intent(this, SubActivity.class);
+			startActivityForResult(i, 100);
+			return true;
 		case R.id.help:        //********//
 			Intent i2 = new Intent(this, HelpPage.class);
 			startActivity(i2);
@@ -150,9 +142,9 @@ public class MapActivity extends FragmentActivity{
 
 			dest = new LatLng(lat, longi);
 
-			if (locManager.isProviderEnabled(locManager.GPS_PROVIDER))
+			if (locManager.isProviderEnabled(locManager.GPS_PROVIDER) && isNetworkAvailable())
 			{
-				GET_LOCATION = false;
+				RUN_ONCE_NETWORK = true;
 				location = locationManager.getLastKnownLocation(locationManager.PASSIVE_PROVIDER);
 
 				double lat2 = location.getLatitude();
@@ -182,6 +174,7 @@ public class MapActivity extends FragmentActivity{
 			}
 			else
 			{
+				runOnceNetwork();
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longi), 17);
 				map.animateCamera(cameraUpdate);	
 			}
@@ -232,6 +225,16 @@ public class MapActivity extends FragmentActivity{
 			RUN_ONCE = false;
 			NoGpsEnabledDialogFragment dialog = new NoGpsEnabledDialogFragment();
 			dialog.show(getFragmentManager(), "dialog");	
+		}
+	}
+	private void runOnceNetwork() {
+		if (RUN_ONCE_NETWORK){
+			RUN_ONCE_NETWORK = false;
+			if(!isNetworkAvailable())
+			{
+				NoNetworkConnectionDialogFragment dialog = new NoNetworkConnectionDialogFragment();
+				dialog.show(getFragmentManager(), "dialog");
+			}	
 		}
 	}
 
@@ -423,14 +426,6 @@ public class MapActivity extends FragmentActivity{
 
 			@Override
 			public void onLocationChanged(Location arg0) {
-				if(GET_LOCATION)
-				{
-					GET_LOCATION = false;
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-						new LatLng(arg0.getLatitude(), arg0
-								.getLongitude()), 17));
-				}
-				 //TODO Auto-generated method stub
 				
 			}
 
@@ -444,7 +439,6 @@ public class MapActivity extends FragmentActivity{
 				RUN_ONCE = true;
 				if (dest != null)
 				{
-					GET_LOCATION = false;
 					Location location = locManager.getLastKnownLocation(locManager.PASSIVE_PROVIDER);
 
 					double lat2 = location.getLatitude();
@@ -489,18 +483,17 @@ public class MapActivity extends FragmentActivity{
 	        // Use the Builder class for convenient dialog construction
 	        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	        builder.setMessage(R.string.no_connection)
-	               .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+	               .setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
 	                   @Override
 					public void onClick(DialogInterface dialog, int id) {
 	                       dialog.cancel();
 	                   }
 	               })
-	               .setNegativeButton(R.string.try_again, new DialogInterface.OnClickListener() {
+	               .setNegativeButton(R.string.settings, new DialogInterface.OnClickListener() {
 	                   @Override
 					public void onClick(DialogInterface dialog, int id) {
 	                       dialog.dismiss();
-	                       View view = findViewById(R.id.menu_button);
-                    	   view.performClick(); 
+	                       startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
 	                   }
 	               });
 	        // Create the AlertDialog object and return it
